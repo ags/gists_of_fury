@@ -1,3 +1,6 @@
+require "dotenv"
+Dotenv.load
+
 ###
 # Blog settings
 ###
@@ -108,3 +111,14 @@ activate :syntax, line_numbers: true
 
 set :markdown_engine, :redcarpet
 set :markdown, fenced_code_blocks: true
+
+activate :s3_sync do |s3_sync|
+  s3_sync.bucket                     = 'gistsoffury.com'
+  s3_sync.region                     = 'us-west-2'
+  s3_sync.aws_access_key_id          = ENV['AWS_KEY_ID']
+  s3_sync.aws_secret_access_key      = ENV['AWS_SECRET_KEY']
+  s3_sync.delete                     = false # We delete stray files by default.
+  s3_sync.after_build                = false # We chain after the build step by default. This may not be your desired behavior...
+  s3_sync.prefer_gzip                = true
+  s3_sync.reduced_redundancy_storage = false
+end
